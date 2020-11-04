@@ -13,9 +13,6 @@ To use the PAM Module with Okta a few steps need to be taken.
 * Configure which Authentication Calls to use PAM for
 * Deploy Script, Configuration Profile (This includes setting up some JAMF Policies)
 
-
-    
-
 ## Create an Okta Application to handle Authentication
 1. Go to the Okta Admin console and go to the Applications page.  (ie. organization.okta.com/admin/apps/active)
 2. Click Add Application and click Create New App.

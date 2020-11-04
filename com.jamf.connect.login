@@ -3,7 +3,7 @@
 <plist version="1.0">
 	<dict>
 		<key>AuthUIOIDCClientID</key>
-		<string>insert-access-client-id-here</string>
+		<string>insert-client-id-here</string>
 		<key>AuthUIOIDCRedirectURI</key>
 		<string>jamfconnect://127.0.0.1/jamfconnect</string>
 		<key>AuthUIOIDCTenant</key>
