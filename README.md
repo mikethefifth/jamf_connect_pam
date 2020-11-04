@@ -40,12 +40,13 @@ These keys can either be set using a Configuration Profile with JAMF Pro or by u
 Example Defaults command: `sudo defaults write /Library/Preferences/com.jamf.connect.login.plist AuthUIOIDCProvider -string Okta`
 
 ## Enable PAM
-JAMF has good instrutions on how to enable the PAM module.  [PAM Module Documentation](https://docs.jamf.com/jamf-connect/1.4.1/administrator-guide/Pluggable_Authentication_Module_(PAM).html)
+JAMF has good instrutions on how to enable the PAM module.  [Jamf Connect Administrator's Guide - Access Management - Pluggable Authentication Module](https://docs.jamf.com/jamf-connect/administrator-guide/Pluggable_Authentication_Module.html)
 
 You can also follow these instructions using the nano editor.
-1. Open terminal and edit the following file `sudo nano /etc/pam.d/sudo`
-2. Once the editor opens, add the following to the 2nd of line of the file.  Right below `# sudo: auth account password session`: `auth sufficient pam_saml.so`
-3. Press control + x to exit and then "y" and the enter key to save changes
+1. Open Terminal and edit the following file `sudo nano /etc/pam.d/sudo`
+2. Once the editor opens, add the following to the second line of the file, below `# sudo: auth account password session`:
+	`auth sufficient 	pam_saml.so`
+3. Type control + X to exit and type "y" and the enter key to save the changes
 
 Now you can use the `sudo` command and you should be prompted for Okta login.  The next step is to configure other authentication methods to use Okta as well.
 
