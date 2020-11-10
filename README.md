@@ -86,17 +86,17 @@ The results shoudl look like below:
 ```
 
 You will notice the `mechanisms` key.  Currently, it is set to `AuthUINoCache`.  If you would like Jamf Connect to not prompt the user for authentication for as long as the Okta Token length is set, change this to `AuthUI`.
-###### Currently this feature does not work as intended, and JAMF has been notified.  No Estimate can be provided at this time for when it will be fixed. ######
+###### Currently this feature does not work as intended, and Jamf has been notified. No Estimate can be provided at this time for when it will be fixed. ######
 
 To be able to use the PAM Module for Authentication we need to do the following steps:
 1. Make a backup of the sudosaml file to use to overwrite the local authentication calls
 2. Determine with authorizationdb calls you want to use Jamf Connect for
 3. Backup the authorizationdb file you are about to overwrite with Jamf Connect
-4. Replace local authentication rule with the jamf connect rule
+4. Replace local authentication rule with the Jamf Connect rule
 
 
 ### Make a backup of the sudosaml file to use to overwrite the local authentication calls###
-To make a backup of the sudosaml file we need to use the security tool.  First you should go to a directory that you want to work out of.  Once there, you can run this command to make a backup:
+To make a backup of the sudosaml file we need to use the security tool. First you should go to a directory that you want to work out of. Once there, you can run this command to make a backup:
 `security authorizationdb read com.jamf.connect.sudosaml > sudosaml.org`
 
 You now have a backup of the Jamf Connect mechanism for authentication.
@@ -108,10 +108,12 @@ In macOS, there are many different authorization calls that are made when certai
 Now that we have determined what the authorization rule that we want to edit is we can replace the default macOS rule with the Jamf Connect one.  Before we do this, we should back up the macOS default rule in case things go wrong.  We can backup this file by typing this command: `security authorizationdb read system.install.software > installsoftware.org`.  
 
 ### Replace local authentication rule with Jamf Connect rule ###
-Now we can add our Jamf Connect rule.  We do this by using the following command: `security authorizationdb write system.install.software < sudosaml.org`.  This will overwrite the rule with the backup of the jamf connect mechanism we made of backup of earlier.  you can verify this worked by typing `security authorizationdb read system.install.software` and you should see the Jamf Connect mechanism.
+Now we can add our Jamf Connect rule.  We do this by using the following command: 
+`security authorizationdb write system.install.software < sudosaml.org`  
 
-Now you can test this by trying to install a package.  If everything was configured properly, you should be prompted for an Okta login when you install Packages or use the `sudo` command in terminal.
+This will overwrite the rule with the backup of the Jamf Connect mechanism we made of backup of earlier. You can verify this worked by typing `security authorizationdb read system.install.software`, and you should see the Jamf Connect mechanism.
 
+Now you can test this by trying to install a package. If everything was configured properly, you should be prompted for an Okta login when you install Packages or use the `sudo` command in Terminal.
 
 ## Authorization Rules ##
 | Rule Domain | Description |                                 
@@ -142,9 +144,11 @@ Now you can test this by trying to install a package.  If everything was configu
 
 ## Deployment
 To deploy the authorization/sudo pam module to machines you need components.
-1. A Jamf Pro policy that runs the script in this repository `jamfconnect_pam_authorizationWrite_v1.sh`.  This can be set to *recurring* or *ongoing* frequency depending on your environment.
-2. A Jamf Pro Policy that installs auth_file (this has a list of all the authorization rewrites you want to make on the target systems). `authorization_list.txt` in this repository.  This policy needs to have a custom trigger of `authFile`, scoped to `All Computers`, and set to an `ongoing` frequency.
-3. A Jamf Pro policy that installs Jamf Connect Login since that is needed for all of the authorizaiton calls.  In the script in this repository, it uses *Jamf Connect Login Trigger* as a trigger but this can be changed.
-4. A Jamf Pro Configuration profile that pushes the PAM module settings to the client.  Please refer to the **Set Keys for the PAM Module** section for the keys to include.
-5. An Okta app that the user must have to make any sudo/authorization requests on the mac.  Refer to **Create an Okta Application to handle Authentication** for configuration.
-6. Depending if you use Jamf Connect Login for logging into Macs, you will have to edit the authchanger command or you will have undesirable results.
+1. A Jamf Pro policy that runs the script in this repository `jamfconnect_pam_authorizationWrite_v1.sh`.
+	This can be set to *recurring* or *ongoing* frequency depending on your environment.
+2. A Jamf Pro Policy that installs auth_file (this has a list of all the authorization rewrites you want to make on the target systems).
+	`authorization_list.txt` in this repository. This policy needs to have a custom trigger of `authFile`, scoped to `All Computers`, and set to an `ongoing` frequency.
+3. A Jamf Pro policy that installs Jamf Connect login window plug-in, since that is needed for all of the authorizaiton calls. In the script in this repository, it uses *Jamf Connect Login Trigger* as a trigger but this can be changed.
+4. A Jamf Pro Configuration profile that pushes the PAM module settings to the client. Please refer to the **Set Keys for the PAM Module** section for the keys to include.
+5. An Okta app that the user must have to make any sudo/authorization requests on the Mac. Refer to **Create an Okta Application to handle authentication** for configuration.
+6. Depending if you use Jamf Connect Login for logging into Macs, you will have to edit the authchanger command.
